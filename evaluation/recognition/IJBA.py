@@ -108,12 +108,10 @@ if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = '5'
     recognizer = LightCNN29_v2()
 
-    syn_root = '/data2/jie.cao/Downloads/IJB-A-frame-f'
-    # syn_root = '/data2/jie.cao/Downloads/IJB-A-img-f'
-    # syn_root = ''
+    syn_root = ''
 
-    evaluate_recognition('/home/jie.cao/main/dataset/IJB-A/protocol/recognition/split2/probe.txt',
-                         '/home/jie.cao/main/dataset/IJB-A/protocol/recognition/split2/gallery.txt',
+    evaluate_recognition('../datasets/IJB-A/protocol/recognition/split2/probe.txt',
+                         '../datasets/IJB-A/protocol/recognition/split2/gallery.txt',
                          recognizer,
                          syn_root=syn_root)
 

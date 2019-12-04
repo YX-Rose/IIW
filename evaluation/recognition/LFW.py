@@ -74,7 +74,7 @@ if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
     from models.recognition.VGGFace import VGGFace, extract_feature
-    feature_extractor = VGGFace()
+    feature_extractor = VGGFace(model_path='../pretrained/VGGFace/model.pth.tar')
 
     # from models.recognition.LightCNN_9 import LightCNN_9, extract_feature
     # feature_extractor = LightCNN_9()
