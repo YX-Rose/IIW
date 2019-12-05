@@ -99,7 +99,7 @@ class _LightCNN29_v2(nn.Module):
         return out, fc
 
 
-def LightCNN29_v2(pretrained=True, model_path=''):
+def LightCNN_29v2(pretrained=True, model_path=''):
 
     model_path = os.path.expanduser(model_path)
     netIP = _LightCNN29_v2(resblock, [1, 2, 3, 4], num_classes=80013)

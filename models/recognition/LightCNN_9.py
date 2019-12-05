@@ -79,7 +79,7 @@ class _LightCNN9(nn.Module):
         return out, feature
 
 
-def LightCNN9(pretrained=True, model_path=''):
+def LightCNN_9(pretrained=True, model_path=''):
     netIP = _LightCNN9(num_classes=79077)
     netIP = torch.nn.DataParallel(netIP).cuda()
     if pretrained:

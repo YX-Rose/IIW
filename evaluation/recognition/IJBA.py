@@ -79,7 +79,7 @@ def calculate_similarity(embeddings):
     return similarity
 
 
-def evaluate_recognition(probe_txt, gallery_txt, feature_extractor, data_root='~/main/dataset/IJB-A/data', syn_root=''):
+def evaluate_recognition(probe_txt, gallery_txt, feature_extractor, data_root="/data1/xin.ma/datasets/IJB-A/data/", syn_root=''):
 
     probe_embeddings, probe_ids = parse_protocol_recognition(probe_txt, os.path.expanduser(data_root), feature_extractor=feature_extractor)
     gallery_embeddings, gallery_ids = parse_protocol_recognition(gallery_txt, os.path.expanduser(data_root), feature_extractor=feature_extractor)
@@ -93,7 +93,7 @@ def evaluate_recognition(probe_txt, gallery_txt, feature_extractor, data_root='~
     rank_accuracy(gallery_embeddings, gallery_ids, probe_embeddings, probe_ids, ranks=5, verbose=True)
 
 
-def evaluate_verification(pair_txt, template_npy, feature_extractor, data_root='~/main/dataset/IJB-A/data'):
+def evaluate_verification(pair_txt, template_npy, feature_extractor, data_root="/data1/xin.ma/datasets/IJB-A/data/"):
 
     embeddings, is_same = parse_protocol_verification(pair_txt, template_npy, os.path.expanduser(data_root), feature_extractor)
     similarity = calculate_similarity(embeddings)
@@ -106,12 +106,12 @@ if __name__ == '__main__':
     from models.recognition.LightCNN_29v2 import LightCNN29_v2, extract_feature
 
     os.environ['CUDA_VISIBLE_DEVICES'] = '5'
-    recognizer = LightCNN29_v2()
+    recognizer = LightCNN29_v2(model_path='../../pretrained/LightCNN_29v2/model.pth.tar')
 
     syn_root = ''
 
-    evaluate_recognition('../datasets/IJB-A/protocol/recognition/split2/probe.txt',
-                         '../datasets/IJB-A/protocol/recognition/split2/gallery.txt',
+    evaluate_recognition("/data1/xin.ma/datasets/IJB-A/protocol/recognition/split2/probe.txt",
+                         "/data1/xin.ma/datasets/IJB-A/protocol/recognition/split2/gallery.txt",
                          recognizer,
                          syn_root=syn_root)
 

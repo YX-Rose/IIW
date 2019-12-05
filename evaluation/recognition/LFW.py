@@ -73,17 +73,19 @@ if __name__ == '__main__':
 
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
-    from models.recognition.VGGFace import VGGFace, extract_feature
-    feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
+    # from models.recognition.VGGFace import VGGFace, extract_feature
+    # feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
+
+    from models.recognition.ArcFace import ArcFace, extract_feature
+    feature_extractor = ArcFace(model_path='../../pretrained/ArcFace/resnet18_110.pth')
 
     # from models.recognition.LightCNN_9 import LightCNN_9, extract_feature
-    # feature_extractor = LightCNN_9()
+    # feature_extractor = LightCNN_9(model_path='../../pretrained/LightCNN_9/model.pth.tar')
 
     # from models.recognition.LightCNN_29v2 import LightCNN_29v2, extract_feature
-    # feature_extractor = LightCNN_29v2()
+    # feature_extractor = LightCNN_29v2(model_path='../../pretrained/LightCNN_29v2/model.pth.tar')
 
-
-    lfw_img_list, is_same = parse_pair_txt(txt_path='../../datasets/LFW/pairs.txt', image_root='../../datasets/LFW/images')
+    lfw_img_list, is_same = parse_pair_txt(txt_path='../../datasets/LFW/pairs.txt', image_root="/data1/xin.ma/datasets/LFW/images/")
     embeddings = parse_list_file(lfw_img_list, feature_extractor)
     similarity = calculate_similarity(embeddings)
     verification(is_same, similarity, verbose=True)
