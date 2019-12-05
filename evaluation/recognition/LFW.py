@@ -77,7 +77,7 @@ if __name__ == '__main__':
     # feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
 
     from models.recognition.ArcFace import ArcFace, extract_feature
-    feature_extractor = ArcFace(model_path='../../pretrained/ArcFace/resnet18_110.pth')
+    feature_extractor = ArcFace(model_path='../../pretrained/ArcFace/model.pth.tar')
 
     # from models.recognition.LightCNN_9 import LightCNN_9, extract_feature
     # feature_extractor = LightCNN_9(model_path='../../pretrained/LightCNN_9/model.pth.tar')
