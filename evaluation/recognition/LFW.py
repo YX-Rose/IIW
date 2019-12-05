@@ -74,7 +74,7 @@ if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
     from models.recognition.VGGFace import VGGFace, extract_feature
-    feature_extractor = VGGFace(model_path='../pretrained/VGGFace/model.pth.tar')
+    feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
 
     # from models.recognition.LightCNN_9 import LightCNN_9, extract_feature
     # feature_extractor = LightCNN_9()
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     # feature_extractor = LightCNN_29v2()
 
 
-    lfw_img_list, is_same = parse_pair_txt(txt_path='../datasets/LFW/pairs.txt', image_root='../datasets/LFW/images')
+    lfw_img_list, is_same = parse_pair_txt(txt_path='../../datasets/LFW/pairs.txt', image_root='../../datasets/LFW/images')
     embeddings = parse_list_file(lfw_img_list, feature_extractor)
     similarity = calculate_similarity(embeddings)
     verification(is_same, similarity, verbose=True)
