@@ -76,8 +76,14 @@ if __name__ == '__main__':
     # from models.recognition.VGGFace import VGGFace, extract_feature
     # feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
 
-    from models.recognition.ArcFace import ArcFace, extract_feature
-    feature_extractor = ArcFace(model_path='../../pretrained/ArcFace/model.pth.tar')
+    # from models.recognition.ArcFace import ArcFace, extract_feature
+    # feature_extractor = ArcFace(model_path='../../pretrained/ArcFace/model.pth.tar')
+
+    # from models.recognition.SphereFace import SphereFace, extract_feature
+    # feature_extractor = SphereFace(model_path='../../pretrained/SphereFace/sphere20a_20171020.pth')
+
+    from models.recognition.MobileFace import MobileFace, extract_feature
+    feature_extractor = MobileFace(model_path='../../pretrained/MobileFace/model_mobilefacenet.pth')
 
     # from models.recognition.LightCNN_9 import LightCNN_9, extract_feature
     # feature_extractor = LightCNN_9(model_path='../../pretrained/LightCNN_9/model.pth.tar')
