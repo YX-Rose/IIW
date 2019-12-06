@@ -83,7 +83,7 @@ if __name__ == '__main__':
     # feature_extractor = SphereFace(model_path='../../pretrained/SphereFace/sphere20a_20171020.pth')
 
     from models.recognition.MobileFace import MobileFace, extract_feature
-    feature_extractor = MobileFace(model_path='../../pretrained/MobileFace/model_mobilefacenet.pth')
+    feature_extractor = MobileFace(model_path='../../pretrained/MobileFace/model.pth.tar')
 
     # from models.recognition.LightCNN_9 import LightCNN_9, extract_feature
     # feature_extractor = LightCNN_9(model_path='../../pretrained/LightCNN_9/model.pth.tar')
