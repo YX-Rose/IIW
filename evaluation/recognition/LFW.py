@@ -4,7 +4,7 @@ import numpy as np
 from scipy import spatial
 
 
-def parse_pair_txt(txt_path='', image_root='', file_ext='jpg', image_root_synthetic='', check_exist=True):
+def parse_pair_txt(txt_path, image_root, file_ext='bmp', image_root_synthetic='', check_exist=True):
 
     pairs = list()
     for line in open(txt_path, 'r').readlines():
@@ -56,12 +56,17 @@ def calculate_similarity(embeddings):
     return similarity
 
 
-def parse_list_file(list_file_path, feature_extractor):
+def parse_list_file(list_file_path, feature_extractor, image_root):
     embeddings = list()
     i = 1
     for img_name in list_file_path:
         i += 1
-        embedding = extract_feature(feature_extractor, img_name)
+        image_path = os.path.join(image_root, img_name)
+
+        # if strip_NIR:
+        # image_path = image_path.replace('/NIR/', '/')
+
+        embedding = extract_feature_v2(feature_extractor, image_path, 48)
         embeddings.append(embedding)
 
     return np.concatenate(embeddings)
@@ -69,29 +74,24 @@ def parse_list_file(list_file_path, feature_extractor):
 
 if __name__ == '__main__':
 
-    from evaluation.metric import verification
+    from face_editing.evaluation.metric import verification
+    # from lightcnn.private import LightCNN29_V4, extract_feature
+    # from vgg.recognition import VGGFace, extract_feature
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '4'
 
     # from models.recognition.VGGFace import VGGFace, extract_feature
     # feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
 
-    # from models.recognition.ArcFace import ArcFace, extract_feature
-    # feature_extractor = ArcFace(model_path='../../pretrained/ArcFace/model.pth.tar')
-
-    # from models.recognition.SphereFace import SphereFace, extract_feature
-    # feature_extractor = SphereFace(model_path='../../pretrained/SphereFace/sphere20a_20171020.pth')
-
-    from models.recognition.MobileFace import MobileFace, extract_feature
-    feature_extractor = MobileFace(model_path='../../pretrained/MobileFace/model_mobilefacenet.pth')
-
     # from models.recognition.LightCNN_9 import LightCNN_9, extract_feature
-    # feature_extractor = LightCNN_9(model_path='../../pretrained/LightCNN_9/model.pth.tar')
+    # feature_extractor = LightCNN_9()
 
-    # from models.recognition.LightCNN_29v2 import LightCNN_29v2, extract_feature
-    # feature_extractor = LightCNN_29v2(model_path='../../pretrained/LightCNN_29v2/model.pth.tar')
+    from face_editing.lightcnn.public import LightCNN29_v2, extract_feature_v2
+    feature_extractor = LightCNN29_v2()
 
-    lfw_img_list, is_same = parse_pair_txt(txt_path='../../datasets/LFW/pairs.txt', image_root="/data1/xin.ma/datasets/LFW/images/")
-    embeddings = parse_list_file(lfw_img_list, feature_extractor)
+    image_root = '/data1/mandi.luo/dataset/lfw/lfw_align3/lfw/image'
+    lfw_img_list, is_same = parse_pair_txt(txt_path=os.path.expanduser('/data1/mandi.luo/dataset/lfw/pairs.txt'),
+                                           image_root=os.path.expanduser(image_root))
+    embeddings = parse_list_file(lfw_img_list, feature_extractor, image_root)
     similarity = calculate_similarity(embeddings)
     verification(is_same, similarity, verbose=True)
