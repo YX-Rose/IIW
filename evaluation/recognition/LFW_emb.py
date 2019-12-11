@@ -81,27 +81,26 @@ def save_data(file_save_path, data_save):
         f.write(data_save)
 
 if __name__ == '__main__':
-    import sys
-    # print(sys.path)
 
     from evaluation.metric import verification
-    # from lightcnn.private import LightCNN29_V4, extract_feature
-    # from vgg.recognition import VGGFace, extract_feature
-    base_root = "/data1/mandi.luo/work/FaceRotation/cjcode-2-v1/mainBig/model_output/FE_frontalization/MP/"
+    from evaluation.recognition.Select_model import select_model
+
+    ############################ FOR EDITTING ####################################
+    #/data1/mandi.luo/work/FaceRotation/cjcode-2-v1/mainBig/model_output/FE_frontalization/MP#
+    base_root = "../../pretrained/Ours/MP/"
     rec_model_epoch = '7'
     weight = 0.5
+    rec_model = 'VGGFace'
+    # rec_model = 'ArcFace'
+    # rec_model = 'SphereFace'
+    # rec_model = 'MobileFace'
+    # rec_model = 'LightCNN_9'
+    # rec_model = 'LightCNN_29v2'
+    ############################ FOR EDITTING ####################################
 
     os.environ['CUDA_VISIBLE_DEVICES'] = '4'
 
-    # from models.recognition.VGGFace import VGGFace, extract_feature
-    # feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
-
-    # from models.recognition.LightCNN_9 import LightCNN_9, extract_feature
-    # feature_extractor = LightCNN_9()
-
-    from models.recognition.LightCNN_29v2 import LightCNN_29v2, extract_feature
-    feature_extractor = LightCNN_29v2(model_path='../../pretrained/LightCNN_29v2/model.pth.tar')
-
+    feature_extractor, extract_feature = select_model(rec_model=rec_model)
     my_model_path = base_root + 'checkpoint'
     feature_extractor_my = myModel(model_path=my_model_path, rec_model_epoch=rec_model_epoch)
 
@@ -120,5 +119,5 @@ if __name__ == '__main__':
                 + 'TPR={:2f}%@FPR=0.01%'.format(100 * tpr001)+ "\n" \
                 + 'AUC: {:.2f}%'.format(100 * auc)+ "\n" \
                 + 'EER: {:.2f}%'.format(100 * eer)
-    file_path = base_root + "LFW_Result-" + str(rec_model_epoch) + "_weight" + str(weight) + ".txt"
+    file_path = base_root + rec_model + "_LFW_Result-" + str(rec_model_epoch) + "_weight" + str(weight) + ".txt"
     save_data(file_path, data_save)

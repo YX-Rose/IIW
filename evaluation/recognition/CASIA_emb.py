@@ -1,16 +1,9 @@
-
 import os
 import numpy as np
 
-from face_editing.evaluation.metric import rank_accuracy, verification, full_comparison
-from face_editing.lightcnn.public import LightCNN9, LightCNN29_v2, extract_feature_v2
-from face_editing.network.my_public import *
-
-# from evaluation.metric import rank_accuracy, verification, full_comparison
-# from lightcnn.public import LightCNN9, LightCNN29_v2, extract_feature_v2
-# from face_editing.network.my_public import *
-
-# from face_editing.lightcnn.public import LightCNN29_V4, extract_feature
+from evaluation.metric import rank_accuracy, verification, full_comparison
+from network.my_public import *
+from evaluation.recognition.Select_model import select_model
 
 
 def parse_line(input_line):
@@ -30,21 +23,19 @@ def parse_list_file(list_file_path, data_root, feature_extractor, strip_NIR=True
             # if strip_NIR:
                 # image_path = image_path.replace('/NIR/', '/')
             if isemb=='0':
-                embedding = extract_feature_v2(feature_extractor, image_path, 48) #ndarray (1,256)
+                embedding = extract_feature(feature_extractor, image_path) #ndarray (1,256)
             else:
-                embedding = extract_feature_myModel(feature_extractor, image_path, 48)  # ndarray (1,256)
+                embedding = extract_feature_myModel(feature_extractor, image_path)  # ndarray (1,256)
             embeddings.append(embedding)
             ids.append(image_id)
     return embeddings, ids
 
 
 def evaluate(isemb, base_root, probe_root, gallery_root, list_root,
-             probe_root_original='/data1/mandi.luo/dataset/Multi-PIE/data/', weight=1.0, testlist=[], rec_model_epoch='7'):
+             probe_root_original='../../datasets/Multi-PIE/images/', weight=1.0, testlist=[], rec_model_epoch='7', rec_model=''):
     print('weight = ' + str(weight))
 
-    # feature_extractor = LightCNN9()
-    feature_extractor = LightCNN29_v2()
-    # feature_extractor = LightCNN29_V4()
+    feature_extractor = select_model(rec_model)
 
     my_model_path = base_root + 'checkpoint'
     feature_extractor_probe = myModel(model_path=my_model_path, rec_model_epoch=rec_model_epoch)
@@ -94,28 +85,36 @@ if __name__ == '__main__':
 
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     isemb = '0' # 1:rec with embedding 2:rec with generated images
-    weight = 0
+    weight = 0.5
     print('=' * 50)
+
+    # rec_model = 'VGGFace'
+    # rec_model = 'ArcFace'
+    # rec_model = 'SphereFace'
+    # rec_model = 'MobileFace'
+    # rec_model = 'LightCNN_9'
+    rec_model = 'LightCNN_29v2'
 
     testlist = [15, 30, 45, 60, 75, 90]
 
-    path_root = "/data1/mandi.luo/work/FaceRotation/cjcode-2-v1/mainBig/model_output/FE_frontalization/MP/"
-    gallery_root = '/data1/mandi.luo/dataset/Multi-PIE/data/'
-    list_root = '/data1/mandi.luo/dataset/Multi-PIE/FS/'
+    # /data1/mandi.luo/work/FaceRotation/cjcode-2-v1/mainBig/model_output/FE_frontalization/MP#
+    path_root = "../../pretrained/Ours/MP/"
+    gallery_root = '../../datasets/Multi-PIE/images/'
+    list_root = '../../datasets/Multi-PIE/FS/'
 
     # #############eval iteration############
     for i in range(7, 8):
         print("test_model_epoch is " + str(i))
         data = evaluate(isemb=isemb, base_root=path_root, probe_root=path_root + 'output-eval' + str(i) + '/', gallery_root=gallery_root,
-                        list_root=list_root, weight=weight, testlist=testlist, rec_model_epoch=str(i))
+                        list_root=list_root, weight=weight, testlist=testlist, rec_model_epoch=str(i), rec_model=rec_model)
 
         for k in range(len(data)):
             data_save = "test_model_epoch " + str(i) + " rank-1 of angle " + str((k + 1) * 15) + " is " \
                                 + str(data[k]) + "\n"
             if isemb=='1':
-                file_path = path_root + "emb_evalResult-" + str(i) + "_weight" + str(weight) + ".txt"
+                file_path = path_root + rec_model + "_CASIA_emb_Result-" + str(i) + "_weight" + str(weight) + ".txt"
             else:
-                file_path = path_root + "evalResult-" + str(i) + "_weight" + str(weight) + ".txt"
+                file_path = path_root + rec_model + "_CASIA_Result-" + str(i) + "_weight" + str(weight) + ".txt"
             save_data(file_path, data_save)
     # #############eval iteration############
 

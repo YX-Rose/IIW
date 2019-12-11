@@ -3,13 +3,13 @@ import os
 import torchvision.transforms as transforms
 
 
-from face_editing.network.pose_gan import *
+from network.pose_gan import *
 from PIL import Image
 
-def extract_feature_myModel(feature_extractor, image_path, batch_size):
+def extract_feature_myModel(feature_extractor, image_path):
     # read the image from the path and use our model to extract the feature embedding
     image = Image.open(image_path)
-    image_emb_transform = transforms.Compose([ transforms.Resize(128), transforms.ToTensor(),
+    image_emb_transform = transforms.Compose([transforms.Resize(128), transforms.ToTensor(),
                                                transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))])
     image_emb = image_emb_transform(image)
     image_emb = torch.unsqueeze(image_emb, dim=0)
