@@ -76,6 +76,7 @@ def verification(is_same, similarity, verbose=True):
         print('TPR={:2f}%@FPR=0.01%'.format(100 * tpr001))
         print('AUC: {:.2f}%'.format(100 * auc))
         print('EER: {:.2f}%'.format(100 * eer))
+        return tpr1, tpr01, tpr001, auc, eer
 
     else:
         output = list()
