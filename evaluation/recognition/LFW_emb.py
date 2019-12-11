@@ -1,10 +1,8 @@
-
 import os
 import numpy as np
 from scipy import spatial
 
-from face_editing.network.my_public import *
-
+from network.my_public import *
 
 def parse_pair_txt(txt_path, image_root, file_ext='bmp', image_root_synthetic='', check_exist=True):
 
@@ -58,17 +56,18 @@ def calculate_similarity(embeddings):
     return similarity
 
 
-def parse_list_file(list_file_path, feature_extractor, feature_extractor_my, image_root, rec_batch, weight):
+def parse_list_file(list_file_path, feature_extractor, feature_extractor_my, image_root, weight):
     embeddings = list()
     i = 1
     for img_name in list_file_path:
         i += 1
-        image_path = os.path.join(image_root, img_name)
+        # image_path = os.path.join(image_root, img_name)
+        image_path = img_name
 
         # if strip_NIR:
         # image_path = image_path.replace('/NIR/', '/')
-        embedding_my = extract_feature_myModel(feature_extractor_my, image_path, rec_batch)
-        embedding_rec = extract_feature_v2(feature_extractor, image_path, rec_batch)
+        embedding_my = extract_feature_myModel(feature_extractor_my, image_path)
+        embedding_rec = extract_feature(feature_extractor, image_path)
 
         embedding = weight * embedding_my + (1 - weight) * embedding_rec
 
@@ -82,13 +81,14 @@ def save_data(file_save_path, data_save):
         f.write(data_save)
 
 if __name__ == '__main__':
+    import sys
+    # print(sys.path)
 
-    from face_editing.evaluation.metric import verification
+    from evaluation.metric import verification
     # from lightcnn.private import LightCNN29_V4, extract_feature
     # from vgg.recognition import VGGFace, extract_feature
     base_root = "/data1/mandi.luo/work/FaceRotation/cjcode-2-v1/mainBig/model_output/FE_frontalization/MP/"
     rec_model_epoch = '7'
-    rec_batch = 48
     weight = 0.5
 
     os.environ['CUDA_VISIBLE_DEVICES'] = '4'
@@ -99,17 +99,18 @@ if __name__ == '__main__':
     # from models.recognition.LightCNN_9 import LightCNN_9, extract_feature
     # feature_extractor = LightCNN_9()
 
-    from face_editing.lightcnn.public import LightCNN29_v2, extract_feature_v2
-    feature_extractor = LightCNN29_v2()
+    from models.recognition.LightCNN_29v2 import LightCNN_29v2, extract_feature
+    feature_extractor = LightCNN_29v2(model_path='../../pretrained/LightCNN_29v2/model.pth.tar')
 
     my_model_path = base_root + 'checkpoint'
     feature_extractor_my = myModel(model_path=my_model_path, rec_model_epoch=rec_model_epoch)
 
-    image_root = '/data1/mandi.luo/dataset/lfw/lfw_align3/lfw/image'
-    lfw_img_list, is_same = parse_pair_txt(txt_path=os.path.expanduser('/data1/mandi.luo/dataset/lfw/pairs.txt'),
+    # image_root = '/data1/mandi.luo/dataset/lfw/lfw_align3/lfw/image'
+    image_root = '../../datasets/LFW/images'
+    lfw_img_list, is_same = parse_pair_txt(txt_path=os.path.expanduser('../../datasets/LFW/pairs.txt'),
                                            image_root=os.path.expanduser(image_root))
 
-    embeddings = parse_list_file(lfw_img_list, feature_extractor, feature_extractor_my, image_root, rec_batch, weight)
+    embeddings = parse_list_file(lfw_img_list, feature_extractor, feature_extractor_my, image_root, weight)
     similarity = calculate_similarity(embeddings)
     tpr1, tpr01, tpr001, auc, eer = verification(is_same, similarity, verbose=True)
 
