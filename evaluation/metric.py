@@ -165,3 +165,37 @@ def rank_accuracy(gallery_embeddings, gallery_ids, probe_embeddings, probe_ids, 
             print('rank-' + str(i+1) + ' accuracy: {:.2f}%'.format(rank_acc[i]))
     else:
         return rank_acc
+
+# recognition
+def rank_accuracy_score_fuse(gallery_embeddings_origin, gallery_embeddings, gallery_ids, probe_embeddings_origin,
+                             probe_embeddings, probe_ids, ranks=1, verbose=True, weight=0):
+    # [embedding1, embedding2, embedding3 ...] are extracted by Light CNN or other face recognizer
+    # [ids1, ids2, ...] should has the same length with embeddings
+    # output is [rank1, rank2, ...]
+
+    gallery_embeddings = np.array(gallery_embeddings).squeeze()
+    probe_embeddings = np.array(probe_embeddings).squeeze()
+
+    gallery_embeddings_origin = np.array(gallery_embeddings_origin).squeeze()
+    probe_embeddings_origin = np.array(probe_embeddings_origin).squeeze()
+
+    similarity_matrix_generated = cosine_similarity(gallery_embeddings, probe_embeddings)
+    similarity_matrix_origin = cosine_similarity(gallery_embeddings_origin, probe_embeddings_origin)
+
+    similarity_matrix = similarity_matrix_generated*weight + (1-weight)*similarity_matrix_origin
+
+    rank_acc = np.zeros(ranks)
+    for i in range(len(probe_embeddings)):
+        distance_list = 1 - similarity_matrix[:, i]
+        for rank in range(1, ranks+1):
+            min_indices = np.argsort(distance_list)[:rank]
+            candidates = [gallery_ids[item] for item in min_indices]
+            if probe_ids[i] in candidates:
+                rank_acc[rank-1] += 1
+
+    rank_acc = 100 * rank_acc / len(probe_embeddings)
+    if verbose:
+        for i in range(ranks):
+            print('rank-' + str(i+1) + ' accuracy: {:.2f}%'.format(rank_acc[i]))
+    else:
+        return rank_acc
