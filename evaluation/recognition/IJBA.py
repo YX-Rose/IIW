@@ -27,6 +27,7 @@ def parse_protocol_recognition(list_file_path, data_root, feature_extractor):
     with open(list_file_path, 'r') as f:
         for line in f.readlines():
             image_name, image_id = parse_line_recognition(line)
+
             image_name = [os.path.join(data_root, item) for item in image_name]
 
             embedding = extract_template(image_name, feature_extractor)
@@ -79,7 +80,7 @@ def calculate_similarity(embeddings):
     return similarity
 
 
-def evaluate_recognition(probe_txt, gallery_txt, feature_extractor, data_root="/data1/xin.ma/datasets/IJB-A/data/", syn_root=''):
+def evaluate_recognition(probe_txt, gallery_txt, feature_extractor, data_root="../../datasets/IJB-A/data/", syn_root=''):
 
     probe_embeddings, probe_ids = parse_protocol_recognition(probe_txt, os.path.expanduser(data_root), feature_extractor=feature_extractor)
     gallery_embeddings, gallery_ids = parse_protocol_recognition(gallery_txt, os.path.expanduser(data_root), feature_extractor=feature_extractor)
@@ -93,7 +94,7 @@ def evaluate_recognition(probe_txt, gallery_txt, feature_extractor, data_root="/
     rank_accuracy(gallery_embeddings, gallery_ids, probe_embeddings, probe_ids, ranks=5, verbose=True)
 
 
-def evaluate_verification(pair_txt, template_npy, feature_extractor, data_root="/data1/xin.ma/datasets/IJB-A/data/"):
+def evaluate_verification(pair_txt, template_npy, feature_extractor, data_root="../../datasets/IJB-A/data/"):
 
     embeddings, is_same = parse_protocol_verification(pair_txt, template_npy, os.path.expanduser(data_root), feature_extractor)
     similarity = calculate_similarity(embeddings)
@@ -103,15 +104,15 @@ def evaluate_verification(pair_txt, template_npy, feature_extractor, data_root="
 if __name__ == '__main__':
 
     from evaluation.metric import rank_accuracy, verification
-    from models.recognition.LightCNN_29v2 import LightCNN29_v2, extract_feature
+    from models.recognition.LightCNN_29v2 import LightCNN_29v2, extract_feature
 
     os.environ['CUDA_VISIBLE_DEVICES'] = '5'
-    recognizer = LightCNN29_v2(model_path='../../pretrained/LightCNN_29v2/model.pth.tar')
+    recognizer = LightCNN_29v2(model_path='../../pretrained/LightCNN_29v2/model.pth.tar')
 
     syn_root = ''
 
-    evaluate_recognition("/data1/xin.ma/datasets/IJB-A/protocol/recognition/split2/probe.txt",
-                         "/data1/xin.ma/datasets/IJB-A/protocol/recognition/split2/gallery.txt",
+    evaluate_recognition("../../datasets/IJB-A/protocol/recognition/split2/probe.txt",
+                         "../../datasets/IJB-A/protocol/recognition/split2/gallery.txt",
                          recognizer,
                          syn_root=syn_root)
 
