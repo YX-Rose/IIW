@@ -57,18 +57,6 @@ def parse_protocol_verification(pair_txt, template_npy, data_root, feature_extra
     return embeddings, is_sames
 
 
-def extract_template(image_names, feature_extractor):
-    template_len = len(image_names)
-    embedding = None
-    for image_path in image_names:
-        if embedding is None:
-            embedding = extract_feature(feature_extractor, image_path)
-        else:
-            embedding += extract_feature(feature_extractor, image_path)
-    embedding = embedding / template_len
-    return embedding
-
-
 def calculate_similarity(embeddings):
     embeddings1 = embeddings[0::2]
     embeddings2 = embeddings[1::2]
