@@ -126,7 +126,6 @@ if __name__ == '__main__':
         data = evaluate(isemb=isemb, base_root=path_root, probe_root=path_root + 'output-eval' + str(i) + '/', gallery_root=gallery_root,
                         list_root=list_root, weight=weight, testlist=testlist, rec_model_epoch=str(i), rec_model=rec_model
                         , score_fuse=score_fuse)
-        exit()
 
         for k in range(len(data)):
             data_save = "test_model_epoch " + str(i) + " rank-1 of angle " + testlist[k] + " is " \
