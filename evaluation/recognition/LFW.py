@@ -56,12 +56,23 @@ def calculate_similarity(embeddings):
     return similarity
 
 
-def parse_list_file(list_file_path, feature_extractor):
+def parse_list_file(list_file_path, feature_extractor, generator_our, weight, mode):
     embeddings = list()
     i = 1
     for img_name in list_file_path:
         i += 1
-        embedding = extract_feature(feature_extractor, img_name)
+        if mode == 'feature fusion': # feature fusing
+            embedding_extra = extract_feature(feature_extractor, img_name)
+            print(embedding_extra.shape)
+            embedding_ours = extract_feature_our(generator_our, img_name)
+            embedding = weight * embedding_extra + (1-weight) * embedding_ours
+        elif mode == 'image fusion':
+            gallery_gen = generator_ours(img_name)
+            embedding = extract_fimg_feature(feature_extractor, img_name, gallery_gen, weight)
+        else:
+            embedding = extract_feature(feature_extractor, img_name)
+            print(embedding.shape)
+            exit()
         embeddings.append(embedding)
 
     return np.concatenate(embeddings)
@@ -71,13 +82,13 @@ if __name__ == '__main__':
 
     from evaluation.metric import verification
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
-    # from models.recognition.VGGFace import VGGFace, extract_feature
-    # feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
+    from models.recognition.VGGFace import VGGFace, extract_feature
+    feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
 
-    from models.recognition.ArcFace import ArcFace, extract_feature
-    feature_extractor = ArcFace(model_path='../../pretrained/ArcFace/model.pth.tar')
+    # from models.recognition.ArcFace import ArcFace, extract_feature
+    # feature_extractor = ArcFace(model_path='../../pretrained/ArcFace/model.pth.tar')
 
     # from models.recognition.SphereFace import SphereFace, extract_feature
     # feature_extractor = SphereFace(model_path='../../pretrained/SphereFace/sphere20a_20171020.pth')
@@ -91,7 +102,10 @@ if __name__ == '__main__':
     # from models.recognition.LightCNN_29v2 import LightCNN_29v2, extract_feature
     # feature_extractor = LightCNN_29v2(model_path='../../pretrained/LightCNN_29v2/model.pth.tar')
 
+    from models.recognition.OurMethod import OurMethod, extract_feature_our
+    generator_our = OurMethod(model_path="../../pretrained/OurMethod/model.pth.tar")
+
     lfw_img_list, is_same = parse_pair_txt(txt_path='../../datasets/LFW/pairs.txt', image_root="../../datasets/LFW/images/")
-    embeddings = parse_list_file(lfw_img_list, feature_extractor)
+    embeddings = parse_list_file(lfw_img_list, feature_extractor, generator_our, 0.5, None)
     similarity = calculate_similarity(embeddings)
     verification(is_same, similarity, verbose=True)

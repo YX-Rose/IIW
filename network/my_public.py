@@ -19,15 +19,12 @@ def extract_feature_myModel(feature_extractor, image_path):
     return embeddings.data.cpu().numpy()
 
 
-def myModel(pretrained=True, model_path='', rec_model_epoch = '7'):
-    model_path = os.path.expanduser(model_path)
+def myModel(model_path=''):
     generator = Generator()
     generator = torch.nn.DataParallel(generator).cuda()
-    if pretrained:
-        assert model_path is not None
-        g_path = os.path.join(model_path, '-'.join(['epoch', str(rec_model_epoch), 'g.pth']))
-        # generator.load_state_dict_gpu(torch.load(g_path))
-        generator.load_state_dict(load_state_dict_gpu(g_path))
+    assert model_path is not None
+    # generator.load_state_dict_gpu(torch.load(g_path))
+    generator.load_state_dict(torch.load(model_path))
 
     return generator
 
