@@ -52,7 +52,7 @@ def evaluate(isemb, base_root, probe_root, gallery_root, list_root,
         print("the angle is " + str(testlist[index]))
         for idx in range(1):
             i = idx + 1
-            probe_list_path = os.path.join(list_root, 'linmultipie_' + str(testlist[index]) + '_test_list.txt')
+            probe_list_path = os.path.join(list_root, 'multipie_' + str(testlist[index]) + '_test_list.txt')
             gallery_list_path = os.path.join(list_root, 'multipie_gallery_test_list.txt')
 
             if isemb=='0':
@@ -107,10 +107,10 @@ if __name__ == '__main__':
 
     # rec_model = 'VGGFace'
     # rec_model = 'ArcFace'
-    rec_model = 'SphereFace'
+    # rec_model = 'SphereFace'
     # rec_model = 'MobileFace'
     # rec_model = 'LightCNN_9'
-    # rec_model = 'LightCNN_29v2'
+    rec_model = 'LightCNN_29v2'
 
     testlist = [15, 30, 45, 60, 75, 90]
 
