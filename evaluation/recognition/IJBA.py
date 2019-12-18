@@ -27,7 +27,6 @@ def parse_protocol_recognition(list_file_path, data_root, feature_extractor):
     with open(list_file_path, 'r') as f:
         for line in f.readlines():
             image_name, image_id = parse_line_recognition(line)
-
             image_name = [os.path.join(data_root, item) for item in image_name]
 
             embedding = extract_template(image_name, feature_extractor)
