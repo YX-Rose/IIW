@@ -71,8 +71,6 @@ def parse_list_file(list_file_path, feature_extractor, generator_our, weight, mo
             embedding = extract_fimg_feature(feature_extractor, img_name, gallery_gen, weight)
         else:
             embedding = extract_feature(feature_extractor, img_name)
-            print(embedding.shape)
-            exit()
         embeddings.append(embedding)
 
     return np.concatenate(embeddings)
@@ -84,11 +82,11 @@ if __name__ == '__main__':
 
     os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
-    from models.recognition.VGGFace import VGGFace, extract_feature
-    feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
+    # from models.recognition.VGGFace import VGGFace, extract_feature
+    # feature_extractor = VGGFace(model_path='../../pretrained/VGGFace/model.pth.tar')
 
-    # from models.recognition.ArcFace import ArcFace, extract_feature
-    # feature_extractor = ArcFace(model_path='../../pretrained/ArcFace/model.pth.tar')
+    from models.recognition.ArcFace import ArcFace, extract_feature
+    feature_extractor = ArcFace(model_path='../../pretrained/ArcFace/model.pth.tar')
 
     # from models.recognition.SphereFace import SphereFace, extract_feature
     # feature_extractor = SphereFace(model_path='../../pretrained/SphereFace/sphere20a_20171020.pth')
