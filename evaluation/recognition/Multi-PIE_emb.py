@@ -129,10 +129,8 @@ if __name__ == '__main__':
         for k in range(len(data)):
             data_save = "test_model_epoch " + str(i) + " rank-1 of angle " + str((k + 1) * 15) + " is " \
                                 + str(data[k]) + "\n"
-            if isemb=='1':
-                file_path = path_root + rec_model + "_CASIA_emb_Result-" + str(i) + "_weight" + str(weight) + ".txt"
-            else:
-                file_path = path_root + rec_model + "_CASIA_Result-" + str(i) + "_weight" + str(weight) + ".txt"
+            file_path = path_root + rec_model + "_M2FPA_Result-emb_" + str(isemb) + "scorefuse_" + \
+                        str(score_fuse) + "_weight" + str(weight) + "_epoch" + str(i) + ".txt"
             save_data(file_path, data_save)
     # #############eval iteration############
 

@@ -132,7 +132,7 @@ if __name__ == '__main__':
                                 + str(data[k]) + "\n"
 
             file_path = path_root + rec_model + "_M2FPA_Result-emb_" + str(isemb) + "scorefuse_" + \
-                        str(score_fuse) + str(i) + "_weight" + str(weight) + ".txt"
+                        str(score_fuse) + "_weight" + str(weight) + "_epoch" + str(i) + ".txt"
             save_data(file_path, data_save)
 
 
