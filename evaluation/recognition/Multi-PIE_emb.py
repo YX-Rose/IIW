@@ -41,14 +41,13 @@ def evaluate(isemb, base_root, probe_root, gallery_root, list_root,
     my_model_path = base_root + 'checkpoint'
     feature_extractor_my = myModel(model_path=my_model_path, rec_model_epoch=rec_model_epoch)
 
-    rank_accs = list()
-    tpr1s = list()
-    tpr01s = list()
-    tpr001s = list()
-
     # testlist = [15, 30, 45, 60, 75, 90]
     resultList = []
     for index in range(len(testlist)):
+        rank_accs = list()
+        tpr1s = list()
+        tpr01s = list()
+        tpr001s = list()
         print("the angle is " + str(testlist[index]))
         for idx in range(1):
             i = idx + 1
@@ -101,7 +100,7 @@ if __name__ == '__main__':
 
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     isemb = '1' # 1:rec with embedding 0:rec with generated images
-    score_fuse = '1' # 1:score fuse 0:embedding fuse
+    score_fuse = '0' # 1:score fuse 0:embedding fuse
     weight = 0.5
     print('=' * 50)
 
@@ -113,7 +112,7 @@ if __name__ == '__main__':
     rec_model = 'LightCNN_29v2'
 
     testlist = [15, 30, 45, 60, 75, 90]
-
+    # testlist = [15, 90, 90]
     # /data1/mandi.luo/work/FaceRotation/cjcode-2-v1/mainBig/model_output/FE_frontalization/MP#
     path_root = "../../pretrained/Ours/MP/"
     gallery_root = '../../datasets/Multi-PIE/images/'
@@ -122,16 +121,18 @@ if __name__ == '__main__':
     # #############eval iteration############
     for i in range(7, 8):
         print("test_model_epoch is " + str(i))
-        data = evaluate(isemb=isemb, base_root=path_root, probe_root=path_root + 'output-eval' + str(i) + '/', gallery_root=gallery_root,
-                        list_root=list_root, weight=weight, testlist=testlist, rec_model_epoch=str(i), rec_model=rec_model
-                        , score_fuse=score_fuse)
+        for weight in range(1, 10):
+            weight = weight*0.1
+            data = evaluate(isemb=isemb, base_root=path_root, probe_root=path_root + 'output-eval' + str(i) + '/', gallery_root=gallery_root,
+                            list_root=list_root, weight=weight, testlist=testlist, rec_model_epoch=str(i), rec_model=rec_model
+                            , score_fuse=score_fuse)
 
-        for k in range(len(data)):
-            data_save = "test_model_epoch " + str(i) + " rank-1 of angle " + str((k + 1) * 15) + " is " \
-                                + str(data[k]) + "\n"
-            file_path = path_root + rec_model + "_MULTIPIE_emb" + str(isemb) + "_scorefuse" + \
-                        str(score_fuse) + "_weight" + str(weight) + "_epoch" + str(i) + ".txt"
-            save_data(file_path, data_save)
+            for k in range(len(data)):
+                data_save = "test_model_epoch " + str(i) + " rank-1 of angle " + str((k + 1) * 15) + " is " \
+                                    + str(data[k]) + "\n"
+                file_path = path_root + rec_model + "_MULTIPIE_emb" + str(isemb) + "_scorefuse" + \
+                            str(score_fuse) + "_weight" + str(weight) + "_epoch" + str(i) + ".txt"
+                save_data(file_path, data_save)
     # #############eval iteration############
 
 
