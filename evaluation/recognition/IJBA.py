@@ -110,14 +110,14 @@ if __name__ == '__main__':
 
     syn_root = ''
 
-    evaluate_recognition("../../datasets/IJB-A/protocol/recognition/split2/probe.txt",
-                         "../../datasets/IJB-A/protocol/recognition/split2/gallery.txt",
-                         recognizer,
-                         syn_root=syn_root)
+    # evaluate_recognition("../../datasets/IJB-A/protocol/recognition/split2/probe.txt",
+    #                      "../../datasets/IJB-A/protocol/recognition/split2/gallery.txt",
+    #                      recognizer,
+    #                      syn_root=syn_root)
 
-    # evaluate_verification('/home/jie.cao/main/dataset/IJB-A/protocol/verification/split2/val_pair.txt',
-    #                       '/home/jie.cao/main/dataset/IJB-A/protocol/verification/split2/val_images.npy',
-    #                       recognizer)
+    evaluate_verification('../../datasets/IJB-A/protocol/verification/split2/val_pair.txt',
+                          '../../datasets/IJB-A/protocol/verification/split2/val_images.npy',
+                          recognizer)
 
     # for i in range(1, 11):
     #
