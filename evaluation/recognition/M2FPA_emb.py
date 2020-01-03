@@ -121,21 +121,34 @@ if __name__ == '__main__':
                 '-15_0', '-15_15', '-15_30', '-15_45', '-15_60', '-15_75', '-15_90',
                 '-30_0', '-30_22', '-30_45', '-30_67', '-30_90',
                 '0_15', '0_30', '0_45', '0_60', '0_75', '0_90']
-    # testlist = ['+30_0', '+30_22', '+30_45', '+30_67', '+30_90',]
+    # testlist = ['+30_90', '-30_90', '0_90', '+30_67',]
+    # testlist = ['+30_90']
 
-    # # "/data1/mandi.luo/work/FaceRotation/cjcode-2-v1/mainBigConcat/model_output/FE_frontalization/MP"
-    # path_root = "../../pretrained/Ours/ConcatMP/"
+    # # "/data1/mandi.luo/work/FaceRotation/cjcode-2-v2"
+    base_root = "../../pretrained/Ours/cjcode-2-v2/"
+    # base_root = "../../pretrained/Ours/cjcode-2-v1/"
 
-    # "/data1/mandi.luo/work/FaceRotation/cjcode-2-v1/mainM2FPA64-3/model_output/FE_frontalization/MP"
-    path_root = "../../pretrained/Ours/M2FPA64-3MP/"
+    # middle_root = "ConcatMP"
+    # middle_root = "mainM2FPA64-1"
+    # middle_root = "mainM2FPA64-2"
+    # middle_root = "mainM2FPA64-3"
+    # middle_root = "mainM2FPA64-4"
+    # middle_root = "mainM2FPA64-5"
+    middle_root = "mainM2FPA64-6"
+    # middle_root = "mainM2FPA64-7"
+
+
+    path_root = base_root + middle_root + "/model_output/FE_frontalization/MP/"
+
+    # path_root = '/data1/mandi.luo/work/FaceRotation/HF_PIM/code/mainM2FPA/model_output/FE_frontalization/MP/'
 
     gallery_root = "../../datasets/M2FPA/collected_fr_data_pitch_align/"
     list_root = '../../datasets/M2FPA/M2FPA_test_protocol/'
 
     for i in range(3, 4):
         print("test_model_epoch is " + str(i))
-        for weight in range(6, 7):
-            weight = weight*0.1
+        for weight in range(5, 10):
+            weight = weight/10
             data = evaluate(isemb=isemb, base_root=path_root, probe_root=path_root + 'output-eval' + str(i) + '/', gallery_root=gallery_root,
                             list_root=list_root, weight=weight, testlist=testlist, rec_model_epoch=str(i), rec_model=rec_model
                             , score_fuse=score_fuse)
@@ -144,7 +157,7 @@ if __name__ == '__main__':
                 data_save = "test_model_epoch " + str(i) + " rank-1 of angle " + testlist[k] + " is " \
                                     + str(data[k]) + "\n"
 
-                file_path = path_root + rec_model + "2_M2FPA_emb" + str(isemb) + "_scorefuse" + \
+                file_path = path_root + rec_model + "_M2FPA_emb" + str(isemb) + "_scorefuse" + \
                             str(score_fuse) + "_weight" + str(weight) + "_epoch" + str(i) + ".txt"
                 save_data(file_path, data_save)
 
