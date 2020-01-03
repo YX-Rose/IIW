@@ -1,15 +1,16 @@
+from utils import util
 import os
 
-root = "/data1/mandi.luo/dataset/M2FPA/M2FPA_test_protocol/gallery0.txt"
+input_root = '/data1/xin.ma/datasets/VGGFace2/'
+image_path = os.path.join(input_root, 'test')
 
-img = []
-with open(root, 'r') as f:
-    for line in f.readlines():
-        rel_img = line.strip().split(' ')[0]
-        img.append(rel_img)
+image_path_rel = []
+image_list = sorted(util.make_dataset_list(image_path))
+for i in image_list:
+   i_rel =  os.path.relpath(i, image_path)
+   image_path_rel.append(i_rel)
 
-with open('/data1/mandi.luo/dataset/M2FPA/M2FPA_test_protocol/all_gallery.txt', 'w') as f:
-    for i in img:
+with open("/data1/xin.ma/datasets/VGGFace2/test.txt", 'w') as f:
+    for i in image_path_rel:
         f.writelines(i)
         f.writelines('\n')
-
